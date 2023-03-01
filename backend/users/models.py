@@ -10,15 +10,13 @@ class User(AbstractUser):
         max_length=254
     )
     first_name = models.CharField(
-        verbose_name='Имя',
         max_length=150
     )
     last_name = models.CharField(
-        verbose_name='Фамилия',
         max_length=150
     )
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['email',]
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -34,7 +32,7 @@ class User(AbstractUser):
         return self.username
 
 
-class Follow(models.Model):
+class Subscribers(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

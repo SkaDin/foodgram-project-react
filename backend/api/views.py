@@ -1,53 +1,53 @@
-from rest_framework.viewsets import ModelViewSet
-from recipes.models import (
-    Recipe,
-    Ingredient,
-    Tag,
-    IngredientInRecipe,
-    Favorite,
-    ShoppingList,
-)
 from django.contrib.auth import get_user_model
+from rest_framework.viewsets import ModelViewSet
 from api.serializers import (
-    RecipeSerializer,
-    IngredientSerializer,
-    IngredientInRecipeSerializer,
     TagSerializer,
-    ShoppingListSerializer,
+    IngredientSerializer,
+    RecipeSerializer,
     FavoriteSerializer,
-    UserSerializer
+    ShoppingListSerializer
 )
-
+from recipes.models import (
+    Tag,
+    Ingredient,
+    Recipe,
+    Favorite,
+    ShoppingList
+)
 
 User = get_user_model()
-
-
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
-
-class IngredientViewSet(ModelViewSet):
-    queryset = Ingredient.objects.all()
-    serialier_class = IngredientSerializer
 
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = ()
+    authentication_classes = ()
 
-class IngredientInRecipeViewSet(ModelViewSet):
-    queryset = IngredientInRecipe
-    serializer_class = IngredientInRecipeSerializer
+
+class IngredientViewSet(ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = ()
+    authentication_classes = ()
+
+
+class RecipeViewSet(ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+    permission_classes = ()
+    authentication_classes = ()
+
 
 class FavoriteViewSet(ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+    permission_classes = ()
+    authentication_classes = ()
+
 
 class ShoppingListViewSet(ModelViewSet):
     queryset = ShoppingList.objects.all()
     serializer_class = ShoppingListSerializer
+    permission_classes = ()
+    authentication_classes = ()
