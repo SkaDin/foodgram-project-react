@@ -1,53 +1,58 @@
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import filters, serializers, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.mixins import (
+    CreateModelMixin,
+    RetrieveModelMixin,
+    DestroyModelMixin,
+)
+from rest_framework.viewsets import (
+    GenericViewSet,
+    ReadOnlyModelViewSet,
+)
 from api.serializers import (
-    TagSerializer,
     IngredientSerializer,
+    SmallRecipeSerializer,
+    RecipeCreateSerializer,
     RecipeSerializer,
-    FavoriteSerializer,
-    ShoppingListSerializer
+    SubscribtionSerializer,
+    TagSerializer,
 )
 from recipes.models import (
-    Tag,
-    Ingredient,
-    Recipe,
     Favorite,
-    ShoppingList
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+    Tag,
 )
+from users.models import Subscribers
+
 
 User = get_user_model()
 
 
-class TagViewSet(ModelViewSet):
+#class CreateRetrieveDestroyViewSet(
+#    CreateModelMixin,
+#    RetrieveModelMixin,
+#    DestroyModelMixin,
+#    GenericViewSet
+#):
+#    """Базовый класс вьюсета."""
+#    pass
+
+
+class UsersSubscriptionsViewSet(GenericViewSet):
+    """Вьюсет для пользователей: подписки/отписки, список подписок. """
+    queryset = User.objects.all()
+    serializer_class = SubscribtionSerializer
+
+
+
+class TagViewSet(ReadOnlyModelViewSet):
+    """Вьюсет для работы с тэгами."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = ()
-    authentication_classes = ()
 
-
-class IngredientViewSet(ModelViewSet):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
-    permission_classes = ()
-    authentication_classes = ()
-
-
-class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
-    permission_classes = ()
-    authentication_classes = ()
-
-
-class FavoriteViewSet(ModelViewSet):
-    queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
-    permission_classes = ()
-    authentication_classes = ()
-
-
-class ShoppingListViewSet(ModelViewSet):
-    queryset = ShoppingList.objects.all()
-    serializer_class = ShoppingListSerializer
-    permission_classes = ()
-    authentication_classes = ()

@@ -59,4 +59,4 @@ class Subscribers(models.Model):
     def save(self, **kwargs):
         if self.user == self.author:
             raise ValidationError('Нельзя подписаться на самого себя!')
-        super().save()
+        return super().save()
