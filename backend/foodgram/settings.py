@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'djoser',
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -46,6 +47,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
+
 
 TEMPLATES = [
     {
@@ -129,21 +131,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
     ],
 
-    'DEFAULT_AUTENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 6,
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'SERIALIZERS': {
-        'user_create': 'api.serializers.UserCreateSerializer',
-        'user': 'api.serializers.UserBaseSerializer',
-        'current_user': 'api.serializers.UserBaseSerializer',
-    }
+    'HIDE_USERS': False,
+    "LOGIN_FIELD": "email",
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.IsAuthenticated'],
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
+    },
+    "SERIALIZERS": {
+        "user_create": "api.serializers.UsersCreateSerializer",
+        "user": "api.serializers.UsersSerializer",
+        "current_user": "api.serializers.UsersSerializer",
+    },
 }

@@ -72,7 +72,7 @@ class Recipe(models.Model):
         max_length=100
     )
     image = models.ImageField(
-        upload_to='recipes/',
+        upload_to='backend/media',
         verbose_name='Изображение'
     )
     text = models.TextField('Описание блюда')
