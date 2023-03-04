@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -6,6 +7,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny
 )
+from api.utils import get_shopping_cart
 from api.paginations import CustomPaginator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -20,18 +22,19 @@ from api.serializers import (
     FavoriteSerializer,
     IngredientSerializer,
     RecipeSerializer,
-    ShoppingCartSerializer,
     TagSerializer,
     FollowSerializer,
     UsersSerializer
 )
-from recipes.models import Ingredient, Recipe, IngredientRecipe, Tag
+from recipes.models import Ingredient, Recipe, Tag
 from users.models import Subscribers, User
 
 class UsersViewSet(UserViewSet):
-    """Вьюсет для работы с пользователями и подписками.
+    """
+    Вьюсет для работы с пользователями и подписками.
     Обработка запросов на создание/получение пользователей и
-    создание/получение/удаления подписок."""
+    создание/получение/удаления подписок.
+    """
     queryset = User.objects.all()
     serializer_class = UsersSerializer
     pagination_class = CustomPaginator
@@ -83,7 +86,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
-#    permission_classes = (AllowAny,)
+    permission_classes = (AllowAny,)
     pagination_class = None
 
 
@@ -135,7 +138,15 @@ class RecipeViewSet(ModelViewSet):
     def favorite(self, request, pk):
         return self.action_post_delete(pk, FavoriteSerializer)
 
-    @action(methods=['POST', 'DELETE'], detail=True)
-    def shopping_cart(self, request, pk):
-        return self.action_post_delete(pk, ShoppingCartSerializer)
 
+    @action(
+        detail=False,
+        methods=['GET'],
+        url_path='download_shopping_cart',
+        permission_classes=[IsAuthenticated]
+    )
+    def download_shopping_cart(self, request):
+        try:
+            return get_shopping_cart(request)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

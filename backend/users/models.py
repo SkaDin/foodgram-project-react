@@ -19,6 +19,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['email',]
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         constraints = [
@@ -47,6 +48,7 @@ class Subscribers(models.Model):
     )
 
     class Meta:
+        ordering = ['author']
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [

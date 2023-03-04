@@ -193,16 +193,16 @@ class RecipeSerializer(ModelSerializer):
             'cooking_time'
         )
 
-#    def validate(self, data):
-#        list_ingr = [item['ingredient'] for item in data['ingredients']]
-#        all_ingredients, distinct_ingredients = (
-#            len(list_ingr), len(set(list_ingr)))
-#
-#        if all_ingredients != distinct_ingredients:
-#            raise ValidationError(
-#                {'error': 'Ингредиенты должны быть уникальными'}
-#            )
-#        return data
+    def validate(self, data):
+        list_ingr = [item['ingredient'] for item in data['ingredients']]
+        all_ingredients, distinct_ingredients = (
+            len(list_ingr), len(set(list_ingr)))
+
+        if all_ingredients != distinct_ingredients:
+            raise ValidationError(
+                {'error': 'Ингредиенты должны быть уникальными'}
+            )
+        return data
 
     def get_ingredients(self, recipe, ingredients):
         IngredientRecipe.objects.bulk_create(
@@ -280,7 +280,7 @@ class GetRecipeSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return obj.in_shopping_carts.filter(user=user).exists()
+        return obj.shopping_carts.filter(user=user).exists()
 
 class FavoriteSerializer(ModelSerializer):
     """Сериализатор добавления/удаления рецепта в избранное."""
