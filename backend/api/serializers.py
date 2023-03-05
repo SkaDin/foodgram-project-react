@@ -1,7 +1,6 @@
 import base64
 
 from django.core.files.base import ContentFile
-from django.db import transaction
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
@@ -68,7 +67,9 @@ class UsersSerializer(UserSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Subscribers.objects.filter(user=user, author=object.id).exists()
+        return Subscribers.objects.filter(
+            user=user,
+            author=object.id).exists()
 
 
 class FollowSerializer(UsersSerializer):
@@ -212,7 +213,7 @@ class RecipeSerializer(ModelSerializer):
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients)
 
-    @transaction.atomic
+
     def create(self, validated_data):
         user = self.context.get('request').user
         tags = validated_data.pop('tags')
@@ -226,7 +227,7 @@ class RecipeSerializer(ModelSerializer):
 
         return recipe
 
-    @transaction.atomic
+
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')

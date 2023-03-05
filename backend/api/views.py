@@ -42,7 +42,7 @@ class UsersViewSet(UserViewSet):
 
 
     @action(methods=['POST', 'DELETE'],
-            detail=True, )
+            detail=True)
     def subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)

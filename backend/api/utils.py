@@ -19,8 +19,8 @@ def get_shopping_cart(request):
                 }
             else:
                 shopping_list[name]['amount'] += amount
-    content = (
-        [f'{item["name"]}- {item["amount"]} '
+    content = ([
+        f'{item["name"]}- {item["amount"]} '
         f'({item["measurement_unit"]})\n'
         for item in shopping_list.values()]
     )
@@ -30,3 +30,4 @@ def get_shopping_cart(request):
         'attachment; filename={0}'.format(filename)
     )
     return response
+    
