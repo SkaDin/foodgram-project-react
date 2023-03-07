@@ -10,7 +10,8 @@ class Tag(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=200,
-        unique=True
+        unique=True,
+        db_index=True
     )
     color = models.CharField(
         verbose_name='Цвет',
@@ -37,7 +38,8 @@ class Ingredient(models.Model):
     """Модель ингредиентов рецепта."""
     name = models.CharField(
         verbose_name='Название ингредиента',
-        max_length=200
+        max_length=200,
+        db_index=True,
     )
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
@@ -65,7 +67,8 @@ class Recipe(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='recipes',
-        verbose_name='Автор публикации'
+        verbose_name='Автор публикации',
+        db_index=True,
     )
     name = models.CharField(
         verbose_name='Название блюда',
@@ -198,4 +201,3 @@ class ShoppingCart(models.Model):
 
     def __str__(self) -> str:
         return f'{self.recipe} в списке покупок : {self.user}'
-

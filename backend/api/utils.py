@@ -30,4 +30,3 @@ def get_shopping_cart(request):
         'attachment; filename={0}'.format(filename)
     )
     return response
-    

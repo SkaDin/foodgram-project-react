@@ -1,6 +1,5 @@
-
-from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (
@@ -24,10 +23,12 @@ from api.serializers import (
     RecipeSerializer,
     TagSerializer,
     FollowSerializer,
-    UsersSerializer
+    UserInfoSerializer,
 )
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import Subscribers, User
+
+
 
 class UsersViewSet(UserViewSet):
     """
@@ -36,10 +37,9 @@ class UsersViewSet(UserViewSet):
     создание/получение/удаления подписок.
     """
     queryset = User.objects.all()
-    serializer_class = UsersSerializer
+    serializer_class = UserInfoSerializer
     pagination_class = CustomPaginator
-    http_method_names = ['get', 'post', 'delete', 'head']
-
+    permission_classes = (AllowAny,)
 
     @action(methods=['POST', 'DELETE'],
             detail=True)
@@ -80,6 +80,7 @@ class UsersViewSet(UserViewSet):
             context={'request': request})
         return self.get_paginated_response(serializer.data)
     
+    
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет для обработки запросов на получение ингредиентов."""
     queryset = Ingredient.objects.all()
@@ -87,7 +88,6 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     permission_classes = (AllowAny,)
-    pagination_class = None
 
 
 class TagViewSet(ReadOnlyModelViewSet):
@@ -95,7 +95,6 @@ class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
-    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):

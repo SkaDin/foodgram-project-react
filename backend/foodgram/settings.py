@@ -146,14 +146,14 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'HIDE_USERS': False,
-    "LOGIN_FIELD": "email",
+    'LOGIN_FIELD': 'email',
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.IsAuthenticated'],
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
     },
-    "SERIALIZERS": {
-        "user_create": "api.serializers.UsersCreateSerializer",
-        "user": "api.serializers.UsersSerializer",
-        "current_user": "api.serializers.UsersSerializer",
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.UsersCreateSerializer',
+        'user': 'api.serializers.UserInfoSerializer',
+        'current_user': 'api.serializers.UserInfoSerializer'
     },
 }
