@@ -157,3 +157,5 @@ DJOSER = {
         'current_user': 'api.serializers.UserInfoSerializer'
     },
 }
+
+LIMIT_VIEW_RECIPE = 3

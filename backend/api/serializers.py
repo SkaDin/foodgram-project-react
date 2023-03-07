@@ -21,7 +21,7 @@ from recipes.models import (
     Tag
 )
 from users.models import Subscribers, User
-
+from foodgram.settings import LIMIT_VIEW_RECIPE
 
 
 class UsersCreateSerializer(UserCreateSerializer):
@@ -85,8 +85,8 @@ class FollowSerializer(UserInfoSerializer):
     def get_recipes(self, object):
         request = self.context.get('request')
         context = {'request': request}
-        recipe_limit = request.query_params.get('recipe_limit')
-        queryset = object.recipes.all()
+        recipe_limit = request.query_params.get('recipes_limit')
+        queryset = object.recipes.all()[:LIMIT_VIEW_RECIPE]
         if recipe_limit:
             queryset = queryset[:int(recipe_limit)]
         return RecipeInfoSerializer(
@@ -215,7 +215,6 @@ class RecipeSerializer(ModelSerializer):
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients)
 
-
     def create(self, validated_data):
         user = self.context.get('request').user
         tags = validated_data.pop('tags')
@@ -228,7 +227,6 @@ class RecipeSerializer(ModelSerializer):
         self.get_ingredients(recipe, ingredients)
 
         return recipe
-
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
