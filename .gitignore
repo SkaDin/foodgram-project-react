@@ -132,7 +132,8 @@ dump.json
 .idea
 
 # media
-media/
-static/
+media*
+
+static*
 
 .vscode
