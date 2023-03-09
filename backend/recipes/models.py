@@ -82,7 +82,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
-        related_name='recipes',
+        related_name='recipe',
         verbose_name='Ингредиенты'
     )
     tags = models.ManyToManyField(
@@ -119,13 +119,13 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='recipe_ingredients',
+        related_name='recipe_ingredient',
         verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='recipe_ingredients',
+        related_name='recipe_ingredient',
         verbose_name='Ингредиент'
     )
     amount = models.PositiveSmallIntegerField(
@@ -152,13 +152,13 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites',
+        related_name='favorite',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorites',
+        related_name='favorite',
         verbose_name='Рецепты'
     )
     class Meta:
@@ -180,13 +180,13 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shopping_carts',
+        related_name='shopping_cart',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shopping_carts',
+        related_name='shopping_cart',
         verbose_name='Рецепты'
     )
     class Meta:

@@ -3,8 +3,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (
+    AllowAny,
     IsAuthenticated,
-    AllowAny
+    IsAuthenticatedOrReadOnly,
+    SAFE_METHODS
 )
 from api.utils import get_shopping_cart
 from api.paginations import CustomPaginator
@@ -24,10 +26,11 @@ from api.serializers import (
     TagSerializer,
     FollowSerializer,
     UserInfoSerializer,
+    ShoppingCartSerializer,
+    GetRecipeSerializer
 )
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import Subscribers, User
-
 
 
 class UsersViewSet(UserViewSet):
@@ -39,7 +42,9 @@ class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserInfoSerializer
     pagination_class = CustomPaginator
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    http_method_names = ['get', 'post', 'delete', 'head']
+
 
     @action(methods=['POST', 'DELETE'],
             detail=True)
@@ -88,6 +93,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     permission_classes = (AllowAny,)
+    pagination_class = None
 
 
 class TagViewSet(ReadOnlyModelViewSet):
@@ -95,6 +101,7 @@ class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
@@ -109,6 +116,7 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = RecipeFilter
     permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = CustomPaginator
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     def action_post_delete(self, pk, serializer_class):
         user = self.request.user
@@ -133,16 +141,20 @@ class RecipeViewSet(ModelViewSet):
             return Response({'error': 'Этого рецепта нет в списке'},
                             status=status.HTTP_400_BAD_REQUEST)
 
+
     @action(methods=['POST', 'DELETE'], detail=True)
     def favorite(self, request, pk):
         return self.action_post_delete(pk, FavoriteSerializer)
-
-
+    
+    @action(methods=['POST', 'DELETE'], detail=True)
+    def shopping_cart(self, request, pk):
+        return self.action_post_delete(pk, ShoppingCartSerializer)
+    
     @action(
         detail=False,
         methods=['GET'],
         url_path='download_shopping_cart',
-        permission_classes=[IsAuthenticated]
+        permission_classes=[IsAuthenticated],
     )
     def download_shopping_cart(self, request):
         try:

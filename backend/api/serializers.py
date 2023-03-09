@@ -11,6 +11,7 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
     SerializerMethodField
 )
+
 from rest_framework.exceptions import ValidationError
 from recipes.models import (
     Favorite, 
@@ -200,7 +201,6 @@ class RecipeSerializer(ModelSerializer):
         list_ingr = [item['ingredient'] for item in data['ingredients']]
         all_ingredients, distinct_ingredients = (
             len(list_ingr), len(set(list_ingr)))
-
         if all_ingredients != distinct_ingredients:
             raise ValidationError(
                 {'error': 'Ингредиенты должны быть уникальными'}
@@ -214,6 +214,7 @@ class RecipeSerializer(ModelSerializer):
                 ingredient=ingredient.get('ingredient'),
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients)
+        
 
     def create(self, validated_data):
         user = self.context.get('request').user
@@ -231,13 +232,20 @@ class RecipeSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-
         IngredientRecipe.objects.filter(recipe=instance).delete()
-
         instance.tags.set(tags)
         self.get_ingredients(instance, ingredients)
-
         return super().update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
+        instance = super().update(instance, validated_data)
+        instance.tags().clear()
+        instance.tags.set(tags)
+        instance.ingredients.clear()
+        self.get_ingredients(recipe=instance,
+                             ingredients=ingredients)
 
     def to_representation(self, instance):
         context = {'request': self.context.get('request')}
@@ -273,22 +281,15 @@ class GetRecipeSerializer(ModelSerializer):
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
-        if user.is_authenticated:
-            try:
-                obj.favorites.get(user=user)
-                return True
-            except Favorite.DoesNotExist:
-                return False
+        if user.is_anonymous:
+            return False
+        return obj.favorite.filter(user=user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
-        if user.is_authenticated:
-            try:
-                obj.shopping_carts.get(user=user)
-                return True
-            except ShoppingCart.DoesNotExist:
-                return False
-
+        if user.is_anonymous:
+            return False
+        return obj.shopping_cart.filter(user=user).exists()
 
 class FavoriteSerializer(ModelSerializer):
     """Сериализатор добавления/удаления рецепта в избранное."""
