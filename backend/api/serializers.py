@@ -3,7 +3,6 @@ import base64
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer,
     ImageField,
@@ -11,14 +10,13 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
     SerializerMethodField
 )
-
 from rest_framework.exceptions import ValidationError
 from recipes.models import (
-    Favorite, 
-    Ingredient, 
-    Recipe, 
+    Favorite,
+    Ingredient,
+    Recipe,
     IngredientRecipe,
-    ShoppingCart, 
+    ShoppingCart,
     Tag
 )
 from users.models import Subscribers, User
@@ -96,7 +94,7 @@ class FollowSerializer(UserInfoSerializer):
 
     def get_recipes_count(self, object):
         return object.recipes.count()
-    
+
 
 class Base64ImageField(ImageField):
     """Кастомное поле для кодирования изображения в base64."""
@@ -213,7 +211,6 @@ class RecipeSerializer(ModelSerializer):
                 ingredient=ingredient.get('ingredient'),
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients)
-        
 
     def create(self, validated_data):
         user = self.context.get('request').user

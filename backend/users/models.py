@@ -3,7 +3,6 @@ from django.db import models
 from rest_framework.exceptions import ValidationError
 
 
-
 class User(AbstractUser):
     email = models.EmailField(
         unique=True,

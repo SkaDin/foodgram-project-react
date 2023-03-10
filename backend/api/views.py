@@ -25,7 +25,7 @@ from api.serializers import (
     TagSerializer,
     FollowSerializer,
     UserInfoSerializer,
-    ShoppingCartSerializer,    
+    ShoppingCartSerializer,
 )
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import Subscribers, User
@@ -42,7 +42,6 @@ class UsersViewSet(UserViewSet):
     pagination_class = CustomPaginator
     permission_classes = (IsAuthenticatedOrReadOnly,)
     http_method_names = ['get', 'post', 'delete', 'head']
-
 
     @action(methods=['POST', 'DELETE'],
             detail=True)
@@ -82,8 +81,8 @@ class UsersViewSet(UserViewSet):
             page, many=True,
             context={'request': request})
         return self.get_paginated_response(serializer.data)
-    
-    
+
+
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет для обработки запросов на получение ингредиентов."""
     queryset = Ingredient.objects.all()
@@ -139,15 +138,14 @@ class RecipeViewSet(ModelViewSet):
             return Response({'error': 'Этого рецепта нет в списке'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-
     @action(methods=['POST', 'DELETE'], detail=True)
     def favorite(self, request, pk):
         return self.action_post_delete(pk, FavoriteSerializer)
-    
+
     @action(methods=['POST', 'DELETE'], detail=True)
     def shopping_cart(self, request, pk):
         return self.action_post_delete(pk, ShoppingCartSerializer)
-    
+
     @action(
         detail=False,
         methods=['GET'],

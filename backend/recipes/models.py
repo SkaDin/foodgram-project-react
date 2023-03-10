@@ -1,8 +1,6 @@
 from django.db import models
 from recipes.validators import validator_coocing_time, validator_amount
-
 from users.models import User
-
 
 
 class Tag(models.Model):
@@ -23,7 +21,7 @@ class Tag(models.Model):
         max_length=200,
         unique=True
     )
-    
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Тег'
@@ -31,7 +29,6 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
 
 
 class Ingredient(models.Model):
@@ -48,12 +45,12 @@ class Ingredient(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name='Ингредиент'
+        verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
             models.UniqueConstraint(
-            fields=['name', 'measurement_unit'],
-            name='unique_name_measurement_unit'
+                fields=['name', 'measurement_unit'],
+                name='unique_name_measurement_unit'
             )
         ]
 
@@ -101,21 +98,24 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering=['-pub_date']
+        ordering = ['-pub_date']
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         constraints = [
             models.UniqueConstraint(
-            fields=['author', 'name'],
-            name='unique_author_name'
+                fields=['author', 'name'],
+                name='unique_author_name'
             )
         ]
 
     def __str__(self):
         return self.name
 
+
 class IngredientRecipe(models.Model):
-    """Модель связывания рецептов и ингредиентов с добавлением поля "amount" """
+    """
+    Модель связывания рецептов и ингредиентов с добавлением поля "amount".
+    """
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -132,6 +132,7 @@ class IngredientRecipe(models.Model):
         verbose_name='Количество',
         validators=[validator_amount]
     )
+
     class Meta:
         verbose_name = 'Количество ингредиента'
         verbose_name_plural = 'Количество ингредиентов'
@@ -161,6 +162,7 @@ class Favorite(models.Model):
         related_name='favorite',
         verbose_name='Рецепты'
     )
+
     class Meta:
         verbose_name = 'Избраное'
         verbose_name_plural = 'Избранное'
@@ -173,7 +175,7 @@ class Favorite(models.Model):
 
     def __str__(self) -> str:
         return f'{self.recipe} в избранном : {self.user}'
-        
+
 
 class ShoppingCart(models.Model):
     """Модель списка покупок пользователей."""
@@ -189,6 +191,7 @@ class ShoppingCart(models.Model):
         related_name='shopping_cart',
         verbose_name='Рецепты'
     )
+
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'

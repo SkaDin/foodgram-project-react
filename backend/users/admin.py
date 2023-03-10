@@ -1,6 +1,6 @@
 from django.contrib import admin
-
 from users.models import User, Subscribers
+
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -13,6 +13,7 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'first_name'
     )
+
 
 @admin.register(Subscribers)
 class SubscribersAdmin(admin.ModelAdmin):

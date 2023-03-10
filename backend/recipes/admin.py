@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from recipes.models import (
     Recipe,
     Ingredient,
@@ -9,9 +8,11 @@ from recipes.models import (
     ShoppingCart
 )
 
+
 class RecipeInline(admin.TabularInline):
     model = Recipe.ingredients.through
-    
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
@@ -27,6 +28,7 @@ class RecipeAdmin(admin.ModelAdmin):
         RecipeInline,
     ]
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
@@ -36,6 +38,7 @@ class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('name',)
     search_fields = ('name',)
 
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
@@ -43,13 +46,14 @@ class TagAdmin(admin.ModelAdmin):
         'color'
     )
 
+
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'recipe'
     )
-    
+
 
 @admin.register(ShoppingCart)
 class ShoppingListAdmin(admin.ModelAdmin):
@@ -66,4 +70,3 @@ class IngredientInRecipeAdmin(admin.ModelAdmin):
         'ingredient',
         'amount'
     )
-
