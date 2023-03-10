@@ -22,7 +22,6 @@ from recipes.models import (
     Tag
 )
 from users.models import Subscribers, User
-from foodgram.settings import LIMIT_VIEW_RECIPE
 
 
 class UsersCreateSerializer(UserCreateSerializer):
@@ -87,7 +86,7 @@ class FollowSerializer(UserInfoSerializer):
         request = self.context.get('request')
         context = {'request': request}
         recipe_limit = request.query_params.get('recipes_limit')
-        queryset = object.recipes.all()[:LIMIT_VIEW_RECIPE]
+        queryset = object.recipes.all()
         if recipe_limit:
             queryset = queryset[:int(recipe_limit)]
         return RecipeInfoSerializer(
@@ -203,7 +202,7 @@ class RecipeSerializer(ModelSerializer):
             len(list_ingr), len(set(list_ingr)))
         if all_ingredients != distinct_ingredients:
             raise ValidationError(
-                {'error': 'Ингредиенты должны быть уникальными'}
+                {'error': 'Ингредиенты должны быть уникальными!'}
             )
         return data
 
@@ -226,7 +225,6 @@ class RecipeSerializer(ModelSerializer):
         )
         recipe.tags.set(tags)
         self.get_ingredients(recipe, ingredients)
-
         return recipe
 
     def update(self, instance, validated_data):
@@ -280,16 +278,23 @@ class GetRecipeSerializer(ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return obj.favorite.filter(user=user).exists()
+        user = self.context['request'].user
+        if user.is_authenticated:
+            try:
+                obj.favorite.get(user=user)
+                return True
+            except Favorite.DoesNotExist:
+                return False
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return obj.shopping_cart.filter(user=user).exists()
+        user = self.context['request'].user
+        if user.is_authenticated:
+            try:
+                obj.shopping_cart.get(user=user)
+                return True
+            except ShoppingCart.DoesNotExist:
+                return False
+
 
 class FavoriteSerializer(ModelSerializer):
     """Сериализатор добавления/удаления рецепта в избранное."""

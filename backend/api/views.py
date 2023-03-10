@@ -6,7 +6,6 @@ from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
-    SAFE_METHODS
 )
 from api.utils import get_shopping_cart
 from api.paginations import CustomPaginator
@@ -26,8 +25,7 @@ from api.serializers import (
     TagSerializer,
     FollowSerializer,
     UserInfoSerializer,
-    ShoppingCartSerializer,
-    GetRecipeSerializer
+    ShoppingCartSerializer,    
 )
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import Subscribers, User
