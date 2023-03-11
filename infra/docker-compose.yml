@@ -3,8 +3,8 @@ services:
 
   frontend:
     build:
-      context: ../
-      dockerfile: frontend/Dockerfile
+      context: ../${{ secrets.USER }}/frontend
+      dockerfile: Dockerfile
       restart: always
     volumes:
       - ../frontend/:/app/result_build/
