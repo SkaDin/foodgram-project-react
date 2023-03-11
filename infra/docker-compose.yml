@@ -3,7 +3,9 @@ services:
 
   frontend:
     build:
+      context: frontend/
       dockerfile: frontend/Dockerfile
+      restart: always
     volumes:
       - ../frontend/:/app/result_build/
 
