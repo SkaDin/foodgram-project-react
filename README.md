@@ -122,4 +122,4 @@ sqlparse==0.3.1
 SkaDin(Сушков Денис)
 
 ### Документация API YaMDb
-```Документация доступна : [Здесь](http://f8dgram.serveblog.net/api/docs/) ```
+Документация доступна по адресу: [адресу](http://f8dgram.serveblog.net/api/docs/)
