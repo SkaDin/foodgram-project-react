@@ -331,4 +331,3 @@ class RecipeInfoSerializer(ModelSerializer):
             'image',
             'cooking_time'
         )
-
