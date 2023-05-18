@@ -1,6 +1,5 @@
 ![](https://github.com/SkaDin/foodgram-project-react/actions/workflows/main.yml/badge.svg?event=push)
-(Username: Admin
-Password: 05111996d)
+
 # Продуктовый помощник
 
 ## Описание
